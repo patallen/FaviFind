@@ -1,6 +1,6 @@
 import csv
 import urllib2
-
+from bs4 import BeautifulSoup
 
 def normalize_url(url):
     """
@@ -11,7 +11,19 @@ def normalize_url(url):
         url = url = 'http://' + url
     if not url.endswith('/'):
         url += '/'
+    print(url)
     return url
+
+def bs_favicon(url):
+    try:
+        soup = BeautifulSoup(urllib2.urlopen(url).read(), "lxml")
+        icon_link = soup.find('link', rel="shortcut icon")
+        icon = icon_link['href']
+
+        return icon
+    except:
+        pass
+
 
 def get_redirect_url(url):
     """
@@ -19,7 +31,7 @@ def get_redirect_url(url):
     """
     redirect_url = ''
     try:
-        redirect_url = urllib2.urlopen(url, timeout=1).geturl()
+        redirect_url = urllib2.urlopen(url, timeout=2).geturl()
     except:
         pass
     return redirect_url
@@ -30,14 +42,17 @@ def get_favicon(url):
 
     favicon_url = ''
     try:
-        res = urllib2.urlopen(url + 'favicon.ico', timeout=1)
-        favicon_url = res.geturl()
+        favicon_url = urllib2.urlopen(url + 'favicon.ico', timeout=5).geturl()
     except:
         pass
     # TODO: If the favicon_url does not end with '.ico'
     # Attempt to find in homepage HTML with BeautifulSoup
+
     if not favicon_url.endswith('.ico'):
-        favicon_url = ""
+        try:
+            favicon_url = bs_favicon(url)
+        except:
+            pass
     return favicon_url
 
 
@@ -47,6 +62,6 @@ if __name__ == '__main__':
     with open('alexa.csv') as alexa_csv:
         reader = csv.reader(alexa_csv, delimiter=',')
         for i, row in enumerate(reader, 1):
-            if i < 200:
+            if i <= 100:
                 #print(row[1])
-                print("{}: {}".format(i, get_favicon(row[1])))
+                print("{}: {} \t\t{}".format(i, row[1], get_favicon(row[1])))
