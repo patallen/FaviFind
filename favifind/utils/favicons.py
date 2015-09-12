@@ -41,7 +41,7 @@ def get_favicon(resolved_url):
         res = requests.get(favicon_url, timeout=TIMEOUT,
                            headers=user_agent, allow_redirects=True)
     except Exception:
-        return ""
+        return None
     if res.status_code == 200:
         return res.url
     else:
@@ -55,7 +55,7 @@ def get_favicon(resolved_url):
             return urljoin(res.url, icon)
         except Exception:
             pass
-    return ""
+    return None
 
 
 def print_csv(count=1000):
