@@ -12,10 +12,13 @@ def resolve_url(url):
     Takes a url and returns the result after
     following redirects
     """
-    with requests.Session() as s:
-        s.max_redirects = 1000
-        res = s.head(base_url(url), timeout=TIMEOUT, allow_redirects=True)
-        return res.url
+    try:
+        with requests.Session() as s:
+            s.max_redirects = 30
+            res = s.head(base_url(url), timeout=TIMEOUT, allow_redirects=True)
+            return res.url
+    except:
+        return None
 
 
 def base_url(url):
@@ -61,7 +64,7 @@ def get_favicon(resolved_url):
 def print_csv(count=1000):
     """
     Used for DEBUG purposes, this function loops
-    through the CSV count number of times and prints
+    through the CSV *count* number of times and prints
     to the console with a final summary.
     """
     with open('alexa.csv') as alexa_csv:

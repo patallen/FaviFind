@@ -18,10 +18,13 @@ def query_favicon(url, update=True):
     if update:
         f = get_favicon(rurl)
         if f:
-            new_favicon = Favicon(url=rurl, favicon=f)
-            db.session.add(new_favicon)
+            if favicon:
+                favicon.favicon = f
+            else:
+                favicon = Favicon(url=rurl, favicon=f)
+            db.session.add(favicon)
             db.session.commit()
-            return new_favicon
+            return favicon
 
     # If not set to update, return favicon in DB
     return favicon
