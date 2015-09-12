@@ -2,15 +2,40 @@
 <html>
 <head>
     <title>FaviFind - Grab Favicon's from any Website!</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1>This is the index page</h1>
-	{% if result %}
-		{% if favicon %}
-			<img src="{{ favicon.favicon }}"/>
-		{% else %}
-			<p>Sorry, we could not get the favicon for... </p>
-		{% endif %}
-	{% endif %}
+	<header class="navbar">
+		<div class="container">
+			<a class="navbar-brand" href="/">FaviFind</a>
+		</div>
+	</header>
+	<div class="container text-center">
+		<h2>How can I help you?</h2>
+		<div class="col-md-offset-2 col-md-8">
+		<form action="/">
+			<div class="input-group">
+				<input class="form-control" type="text" value="{{request.args.get('d', '')}}"name="d">
+				<div class="input-group-btn">
+					<input type="submit" value="Find" class="btn btn-primary">
+				</div>
+			</div>
+			<div class="checkbox">
+				<label><input type="checkbox" name="fresh"> Get Freshest?</label>
+			</div>
+		</form>
+			{% if result %}
+			<div class="results well">
+				{% if favicon %}
+					<img src="{{ favicon.favicon }}"/>
+					<p>Favicon was first found on <strong>{{ favicon.created_at.strftime("%b %d, %Y") }}</strong></p>
+				{% else %}
+				<p>Sorry, we could not find the favicon for:</p><p><strong>{{request.args.get('d')}}</strong> :(</p>
+				{% endif %}
+			</div>
+			{% endif %}
+		</div>
+	</div>
 </body>
 </html>

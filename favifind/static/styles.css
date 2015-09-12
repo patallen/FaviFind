@@ -1,0 +1,14 @@
+.container {
+	max-width: 800px;
+}
+
+.navbar {
+	background: tomato 
+}
+.navbar a {
+	color: white
+}
+
+.results > img {
+	max-width: 32px
+}
