@@ -11,7 +11,7 @@ def test_task(seconds):
     print("Done sleeping.")
 
 
-@celery.task(name="load_favicon")
+@celery.task(name="load_favicon", max_retries=3)
 def load_favicon(url):
     return database.query_favicon(url)
 

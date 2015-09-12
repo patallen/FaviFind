@@ -4,7 +4,7 @@ from urlparse import urlparse, urljoin
 from bs4 import BeautifulSoup as bs
 
 
-TIMEOUT = 2
+TIMEOUT = 5
 
 
 def resolve_url(url):

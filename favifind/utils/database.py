@@ -13,7 +13,10 @@ def query_favicon(url, update=True):
     rurl = resolve_url(url)
     # 2. Try to get the favicon in DB
     if rurl:
-        favicon = Favicon.query.filter_by(url=rurl).first()
+        try:
+            favicon = Favicon.query.filter_by(url=rurl).first()
+        except:
+            raise Exception
     else:
         return None
 
