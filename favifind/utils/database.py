@@ -12,7 +12,10 @@ def query_favicon(url, update=True):
     # 1. Resolve the URL given
     rurl = resolve_url(url)
     # 2. Try to get the favicon in DB
-    favicon = Favicon.query.filter_by(url=rurl).first()
+    if rurl:
+        favicon = Favicon.query.filter_by(url=rurl).first()
+    else:
+        return None
 
     # If set to update, put the new favicon in DB and return it
     if update:
@@ -22,6 +25,7 @@ def query_favicon(url, update=True):
                 favicon.favicon = f
             else:
                 favicon = Favicon(url=rurl, favicon=f)
+
             db.session.add(favicon)
             db.session.commit()
             return favicon

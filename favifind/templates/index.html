@@ -5,5 +5,12 @@
 </head>
 <body>
     <h1>This is the index page</h1>
+	{% if result %}
+		{% if favicon %}
+			<img src="{{ favicon.favicon }}"/>
+		{% else %}
+			<p>Sorry, we could not get the favicon for... </p>
+		{% endif %}
+	{% endif %}
 </body>
 </html>

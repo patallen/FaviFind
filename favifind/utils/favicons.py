@@ -15,7 +15,8 @@ def resolve_url(url):
     try:
         with requests.Session() as s:
             s.max_redirects = 30
-            res = s.head(base_url(url), timeout=TIMEOUT, allow_redirects=True)
+            # Use .get - .head doesn't always resolve properly
+            res = s.get(base_url(url), timeout=TIMEOUT, allow_redirects=True)
             return res.url
     except:
         return None
