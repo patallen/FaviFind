@@ -40,7 +40,8 @@ def get_favicon(resolved_url):
     """
     # First, check if base_url returns OK with '/favicon.ico'
     favicon_url = base_url(resolved_url) + 'favicon.ico'
-    user_agent = {'User-Agent': 'Mozilla/5.0'}
+    # Not sure which user-agent to use for best results
+    user_agent = {'User-Agent': ''}
     try:
         res = requests.get(favicon_url, timeout=TIMEOUT,
                            headers=user_agent, allow_redirects=True)
