@@ -6,6 +6,10 @@ from flask import render_template, request
 @app.route('/')
 def index():
     """
+    Main and only view for FaviFind that displays a favicon
+    to the user based on his/her query.
+
+    Takes 'd' (domain) and fresh query string parameters.
     """
     favicon = None
     get_fresh = False
