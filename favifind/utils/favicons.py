@@ -1,3 +1,4 @@
+import re
 import csv
 import requests
 from urlparse import urlparse, urljoin
@@ -5,6 +6,12 @@ from bs4 import BeautifulSoup as bs
 
 
 TIMEOUT = 5
+
+user_agent = {'User-Agent': ''}
+rkwargs = {'timeout': TIMEOUT,
+           'allow_redirects': True,
+           'headers': user_agent,
+           'verify': False}
 
 
 def resolve_url(url):
@@ -16,7 +23,7 @@ def resolve_url(url):
         with requests.Session() as s:
             s.max_redirects = 30
             # Use .get - .head doesn't always resolve properly
-            res = s.get(base_url(url), timeout=TIMEOUT, allow_redirects=True, verify=False)
+            res = s.get(base_url(url), **rkwargs)
             return res.url
     except:
         return None
@@ -34,32 +41,27 @@ def base_url(url):
     return '{url.scheme}://{url.netloc}/'.format(url=parsed_url)
 
 
-def get_favicon(resolved_url):
+def get_favicon(res_url):
     """
     Takes a resolved url and returns it's favicon
     """
     # First, check if base_url returns OK with '/favicon.ico'
-    favicon_url = base_url(resolved_url) + 'favicon.ico'
+    favicon_url = base_url(res_url) + 'favicon.ico'
     # Not sure which user-agent to use for best results
-    user_agent = {'User-Agent': ''}
     try:
-        res = requests.get(favicon_url, timeout=TIMEOUT,
-                           headers=user_agent, allow_redirects=True,
-                           verify=False)
+        res = requests.get(favicon_url, **rkwargs)
     except:
         return None
+
     if res.status_code == 200:
         return res.url
     else:
         # If we can't resolve '/favicon.ico', try to use
-        # BeautifulSoup to get the 'shortcut icon' link
+        # BeautifulSoup to get the 'icon' link
         try:
-            res = requests.get(base_url(resolved_url),
-                               headers=user_agent,
-                               timeout=TIMEOUT,
-                               verify=False)
+            res = requests.get(base_url(res_url), **rkwargs)
             soup = bs(res.content, "html.parser")
-            icon_link = soup.find('link', rel="shortcut icon")
+            icon_link = soup.find('link', rel=re.compile('icon', re.I))
             icon = icon_link['href']
             return urljoin(res.url, icon)
         except:
@@ -79,7 +81,7 @@ def print_csv(count=1000):
         for i, row in enumerate(reader, 1):
             if i <= count:
                 favicon = get_favicon(row[1])
-                if favicon == "":
+                if favicon is None:
                     err_count += 1
                 print("{}: {}".format(i, favicon))
         summary = "\nSummary:\n--------\nUnknown: {}\nPct Unknown: {}"
