@@ -44,7 +44,7 @@ def get_favicon(resolved_url):
     user_agent = {'User-Agent': ''}
     try:
         res = requests.get(favicon_url, timeout=TIMEOUT,
-                           headers=user_agent, allow_redirects=True
+                           headers=user_agent, allow_redirects=True,
                            verify=False)
     except:
         return None
