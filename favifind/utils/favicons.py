@@ -16,7 +16,7 @@ def resolve_url(url):
         with requests.Session() as s:
             s.max_redirects = 30
             # Use .get - .head doesn't always resolve properly
-            res = s.get(base_url(url), timeout=TIMEOUT, allow_redirects=True)
+            res = s.get(base_url(url), timeout=TIMEOUT, allow_redirects=True, verify=False)
             return res.url
     except:
         return None
@@ -44,8 +44,9 @@ def get_favicon(resolved_url):
     user_agent = {'User-Agent': ''}
     try:
         res = requests.get(favicon_url, timeout=TIMEOUT,
-                           headers=user_agent, allow_redirects=True)
-    except Exception:
+                           headers=user_agent, allow_redirects=True
+                           verify=False)
+    except:
         return None
     if res.status_code == 200:
         return res.url
@@ -53,12 +54,15 @@ def get_favicon(resolved_url):
         # If we can't resolve '/favicon.ico', try to use
         # BeautifulSoup to get the 'shortcut icon' link
         try:
-            res = requests.get(base_url(resolved_url), timeout=TIMEOUT)
+            res = requests.get(base_url(resolved_url),
+                               headers=user_agent,
+                               timeout=TIMEOUT,
+                               verify=False)
             soup = bs(res.content, "html.parser")
             icon_link = soup.find('link', rel="shortcut icon")
             icon = icon_link['href']
             return urljoin(res.url, icon)
-        except Exception:
+        except:
             pass
     return None
 
