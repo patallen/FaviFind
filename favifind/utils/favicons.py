@@ -28,11 +28,9 @@ def resolve_url(url):
     following redirects
     """
     try:
-        with requests.Session() as s:
-            s.max_redirects = 30
-            # Use .get - .head doesn't always resolve properly
-            res = s.get(base_url(url), **rkwargs)
-            return res.url
+        # Use .get - .head doesn't always resolve properly
+        res = requests.get(base_url(url), **rkwargs)
+        return res.url
     except:
         raise ResolveException('Unable to resolve URL {}'.format(url))
 
