@@ -5,17 +5,17 @@ from urlparse import urlparse, urljoin
 from bs4 import BeautifulSoup as bs
 
 
-class ResolveException(BaseException):
+class ResolveException(Exception):
     pass
 
 
-class GetFaviconException(BaseException):
+class GetFaviconException(Exception):
     pass
 
 
 TIMEOUT = 5
 
-user_agent = {'User-Agent': ''}
+user_agent = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'}
 rkwargs = {'timeout': TIMEOUT,
            'allow_redirects': True,
            'headers': user_agent,
@@ -72,7 +72,8 @@ def get_favicon(res_url):
             icon = icon_link['href']
             return urljoin(res.url, icon)
         except:
-            raise GetFaviconException("Unable to get favicon for {}".format(res_url))
+            raise GetFaviconException("Unable to get favicon for {}"
+                                      .format(res_url))
 
 
 def print_csv(count=1000):
