@@ -22,5 +22,9 @@ def index():
 
     result = domain is not None
     if domain:
-        favicon = query_favicon(domain, get_fresh=get_fresh)
+        try:
+            favicon = query_favicon(domain, get_fresh=get_fresh)
+        except:
+            # Don't throw an error, but return None
+            pass
     return render_template('index.html', favicon=favicon, result=result)
