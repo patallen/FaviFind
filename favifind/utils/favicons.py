@@ -5,6 +5,14 @@ from urlparse import urlparse, urljoin
 from bs4 import BeautifulSoup as bs
 
 
+class ResolveException(BaseException):
+    pass
+
+
+class GetFaviconException(BaseException):
+    pass
+
+
 TIMEOUT = 5
 
 user_agent = {'User-Agent': ''}
@@ -26,7 +34,7 @@ def resolve_url(url):
             res = s.get(base_url(url), **rkwargs)
             return res.url
     except:
-        return None
+        raise ResolveException('Unable to resolve URL {}'.format(url))
 
 
 def base_url(url):
@@ -47,11 +55,10 @@ def get_favicon(res_url):
     """
     # First, check if base_url returns OK with '/favicon.ico'
     favicon_url = base_url(res_url) + 'favicon.ico'
-    # Not sure which user-agent to use for best results
     try:
         res = requests.get(favicon_url, **rkwargs)
     except:
-        return None
+        raise GetFaviconException("No response from {}".format(favicon_url))
 
     if res.status_code == 200:
         return res.url
@@ -65,8 +72,7 @@ def get_favicon(res_url):
             icon = icon_link['href']
             return urljoin(res.url, icon)
         except:
-            pass
-    return None
+            raise GetFaviconException("Unable to get favicon for {}".format(res_url))
 
 
 def print_csv(count=1000):

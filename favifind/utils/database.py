@@ -3,35 +3,42 @@ from favifind.models import Favicon
 from favifind.utils.favicons import resolve_url, get_favicon
 
 
-def query_favicon(url, update=True):
+
+
+def query_favicon(url, get_fresh=True):
     """
     Query the database for the favicon.
-    If check_new is True, use get_favicon to update
+    If get_fresh is True, use get_favicon to update
     the database to reflect newest favicon.
     """
-    # 1. Resolve the URL given
-    rurl = resolve_url(url)
-    # 2. Try to get the favicon in DB
-    if rurl:
-        try:
-            favicon = Favicon.query.filter_by(url=rurl).first()
-        except:
-            raise Exception
-    else:
-        return None
+    favicon = None
 
-    # If set to update, put the new favicon in DB and return it
-    if update:
+    # Try to resolve URL, otherwise return None
+    rurl = resolve_url(url)
+
+    # No matter what, we will need to check for existing favicon
+    favicon = Favicon.query.filter_by(url=rurl).first()
+
+    if get_fresh:
+        # If get_fresh is true we will not even check the database
         f = get_favicon(rurl)
         if f:
             if favicon:
                 favicon.favicon = f
             else:
                 favicon = Favicon(url=rurl, favicon=f)
-
             db.session.add(favicon)
             db.session.commit()
-            return favicon
+        else:
+            # Return None if couldn't get favicon
+            # We do not want to return existing
+            return None
+    else:
+        if not favicon:
+            f = get_favicon(rurl)
+            if f:
+                favicon = Favicon(url=rurl, favicon=f)
+                db.session.add(favicon)
+                db.session.commit()
 
-    # If not set to update, return favicon in DB
     return favicon
