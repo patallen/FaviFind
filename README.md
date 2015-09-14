@@ -1,5 +1,5 @@
 ## FaviFind
-[Live Version](http://107.191.41.253/)
+[Live Version](http://107.191.41.253/) - Hosted on [Vultr.com](http://vultr.com/) VPS using nginx and uwsgi.
 
 Web application for retrieving the favicon of a given website.
 
@@ -31,7 +31,7 @@ If I had more time on this I would:
 #### Seed the database
 
 The length of time that it will take to seed the database is dependent on the amount of RAM and number of cores on the machine.
-For me, it took ~2-3 hours on 8GB RAM, 4 core VPS to try to retrieve and seed 200,000 favicon URLs.
+For me, it took ~2-3 hours on 8GB RAM, 4 core VPS running 20 celery workers to try to retrieve and seed 200,000 favicon URLs.
 - Launch workers with celery multi:
 	- `$ celery multi 20 -A favifind.celery`
 - Start up Flower for monitoring
