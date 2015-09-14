@@ -64,6 +64,8 @@ def get_favicon(res_url):
     else:
         # If we can't resolve '/favicon.ico', try to use
         # BeautifulSoup to get the 'icon' link
+        # NOTE: This step should probably be done before trying to
+        # resolve /favicon.ico because the link takes precidence.
         try:
             res = requests.get(base_url(res_url), **rkwargs)
             soup = bs(res.content, "html.parser")
