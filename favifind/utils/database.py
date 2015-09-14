@@ -38,5 +38,4 @@ def query_favicon(url, get_fresh=True):
                 favicon = Favicon(url=rurl, favicon=f)
                 db.session.add(favicon)
                 db.session.commit()
-
     return favicon

@@ -17,13 +17,13 @@
 		<div class="col-md-offset-2 col-md-8">
 		<form action="/">
 			<div class="input-group">
-				<input class="form-control" type="text" value="{{request.args.get('d', '')}}"name="d">
+				<input class="form-control" type="text" value="{{request.args.get('d', '')}}"name="d" required>
 				<div class="input-group-btn">
 					<input type="submit" value="Find" class="btn btn-primary">
 				</div>
 			</div>
 			<div class="checkbox">
-				<label><input type="checkbox" name="fresh"> Get Freshest?</label>
+				<label><input type="checkbox" name="fresh" checked> Get Freshest?</label>
 			</div>
 		</form>
 			{% if result %}
