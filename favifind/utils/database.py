@@ -3,8 +3,6 @@ from favifind.models import Favicon
 from favifind.utils.favicons import resolve_url, get_favicon
 
 
-
-
 def query_favicon(url, get_fresh=True):
     """
     Query the database for the favicon.
@@ -31,7 +29,7 @@ def query_favicon(url, get_fresh=True):
             db.session.commit()
         else:
             # Return None if couldn't get favicon
-            # We do not want to return existing
+            # We do not want to return existing from database
             return None
     else:
         if not favicon:

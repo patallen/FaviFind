@@ -1,8 +1,8 @@
-import re
-import csv
-import requests
-from urlparse import urlparse, urljoin
 from bs4 import BeautifulSoup as bs
+from urlparse import urlparse, urljoin
+import csv
+import re
+import requests
 
 
 class ResolveException(Exception):
@@ -13,9 +13,10 @@ class GetFaviconException(Exception):
     pass
 
 
-TIMEOUT = 5
-
 user_agent = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'}
+# Timeout in seconds for requests methods
+TIMEOUT = 3
+# Used for keyword arguments in requests functions
 rkwargs = {'timeout': TIMEOUT,
            'allow_redirects': True,
            'headers': user_agent,
