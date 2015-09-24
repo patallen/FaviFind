@@ -75,22 +75,3 @@ def get_favicon(res_url):
         except:
             raise GetFaviconException("Unable to get favicon for {}"
                                       .format(res_url))
-
-
-def print_csv(count=1000):
-    """
-    Used for DEBUG purposes, this function loops
-    through the CSV *count* number of times and prints
-    to the console with a final summary.
-    """
-    with open('alexa.csv') as alexa_csv:
-        reader = csv.reader(alexa_csv, delimiter=',')
-        err_count = 0
-        for i, row in enumerate(reader, 1):
-            if i <= count:
-                favicon = get_favicon(row[1])
-                if favicon is None:
-                    err_count += 1
-                print("{}: {}".format(i, favicon))
-        summary = "\nSummary:\n--------\nUnknown: {}\nPct Unknown: {}"
-        print(summary.format(err_count, (err_count*1.0)/count*100))
